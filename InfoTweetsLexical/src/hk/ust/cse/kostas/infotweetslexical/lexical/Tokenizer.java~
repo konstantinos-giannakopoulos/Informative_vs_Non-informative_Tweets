@@ -1,0 +1,33 @@
+/*
+ * Created on February 25, 2015 by kostas-κγ 
+ *
+ * This is part of the InfoTweetsLexical project. 
+ * Any subsequent modification
+ * of the file should retain this disclaimer. 
+ *
+ * The Hong Kong University of Science and Technology,
+ * School of Computer Science and Engineering
+ */
+package infotweetslexical.lexical;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class Tokenizer {
+    public Tokenizer() {
+
+    } // Tokenizer()
+
+    /**
+     *
+     */
+    public List<String> tokenizeText(String text) {
+	List<String> resultlist = new ArrayList<String>();
+	//String delimilters = "[\\.{3}\\]\\[,\\s+\n\\?!()'\">\\*\\+\\-]+";
+	String delimilters = " ";
+	String[] result = text.split(delimilters);
+	return Arrays.asList(result);
+    } // tokenizeText()
+    
+} // Tokenizer

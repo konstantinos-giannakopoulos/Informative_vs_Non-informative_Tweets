@@ -1,0 +1,63 @@
+/*
+ * Created on February 20, 2015 by kostas-œô§ºœô§³   
+ *
+ * This is part of the InfoTweetsDB project. 
+ * Any subsequent modification
+ * of the file should retain this disclaimer. 
+ *
+ * The Hong Kong University of Science and Technology,
+ * School of Computer Science and Engineering
+ */
+package hk.ust.cse.kostas.infotweetsdb.client;
+
+import java.math.BigDecimal;
+
+import hk.ust.cse.kostas.infotweetsdb.util.ProjectProperties;
+import hk.ust.cse.kostas.infotweetsdb.database.Database;
+import hk.ust.cse.kostas.infotweetsdb.database.Tuple;
+
+/**
+ *
+ *
+ * @author kostas-œô§ºœô§³   
+ */
+public class InfoTweetsDB {
+
+    private static final InfoTweetsDB INSTANCE = new InfoTweetsDB();
+    private InfoTweetsDB() {}
+    public static InfoTweetsDB getInstance() {return INSTANCE;}
+
+    public void execute(ProjectProperties properties) {	
+	Database database = new Database(properties);
+
+	Tuple tuple = new Tuple();
+	tuple.messageID = new BigDecimal(389651089101832192);
+	tuple.authorID = new BigDecimal(609047121);
+	tuple.message = "tweet";
+	tuple.informative = false;
+	tuple.category = 13;
+	tuple.isReply = true;
+	tuple.replyToMessageID = new BigDecimal(2);
+	tuple.replyToAuthorID = new BigDecimal(200);
+	tuple.isRetweet = true;
+	tuple.retweetFromMessageID = new BigDecimal(3);
+	tuple.retweetFromAuthorID = new BigDecimal(300);
+
+	//database.insertTuple(tuple);
+	System.out.println(database.extractTuples());
+    }
+
+    public static void main(String[] args) {
+	ProjectProperties properties = new ProjectProperties();
+
+	properties.project = args[0];
+	properties.database = args[1];
+	properties.table = args[2];
+	
+	System.out.println("This is project: " + properties.project ); 
+	System.out.println("Database: " + properties.database); 
+	System.out.println("Table: " + properties.table); 
+	InfoTweetsDB.getInstance().execute(properties);
+    }
+
+} // InfoTweetsDB

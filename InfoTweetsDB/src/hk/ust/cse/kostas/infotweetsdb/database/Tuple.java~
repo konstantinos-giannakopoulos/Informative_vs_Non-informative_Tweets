@@ -1,0 +1,11 @@
+package hk.ust.cse.kostas.infotweetsdb.database;
+
+public class Tuple {
+
+    public String tuple;
+    
+    public Tuple(String t) {
+	this.tuple = t;
+    } 
+
+} // Tuple

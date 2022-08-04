@@ -1,0 +1,20 @@
+package infotweetsjsontoxmltodb.database;
+
+/**
+ * Not really used. Only for merging tuples.
+ * It is used by mergeLabels function to extract all tuples 
+ * from relation labels.
+ * This is a relation taken from another database. 
+ * It was not initially created by this project. 
+ */
+public class LabelTuple { 
+
+    public String message;
+    public boolean informative;
+    public int category;
+
+    public LabelTuple() {
+
+    }
+
+} // LabelTuple

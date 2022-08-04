@@ -1,0 +1,120 @@
+/*
+ * Created on February 22, 2015 by kostas-κγ 
+ *
+ * This is part of the OutlierDetector project. 
+ * Any subsequent modification
+ * of the file should retain this disclaimer. 
+ *
+ * The Hong Kong University of Science and Technology,
+ * School of Computer Science and Engineering
+ */
+package hk.ust.cse.kostas.infotweetsalgorithms.models.clustering;
+
+import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+
+//import datastructures.tweet.TweetItemList;
+//import datastructures.tweet.TweetItem;
+//import datastructures.FeatureSet;
+import hk.ust.cse.kostas.infotweetsalgorithms.datapoint.Datapoint;
+//import dictionary.Dictionary;
+//import metrics.SCMPTfidf;
+//import metrics.TweetScore;
+//import models.contextual.Contextual;
+//import util.Log;
+//import util.Debugger;
+
+/**
+ * Clustering: 
+ *
+ * @author kostas
+ */
+public class Clustering {
+
+    protected List<Datapoint> datapoints;
+    //private Log logfiles; 
+
+    /**
+     * Constructs a new cross validation instance, given a dataset,
+     * the number of tweets, the number of paritions,
+     * and a supervized text classification tc.
+     *
+     */
+    public Clustering(List<Datapoint> datapoints) {
+	this.datapoints = datapoints;
+	//this.logfiles = Log.getInstance(); 
+    } // Clustering()
+
+    /**
+     * Subclasses should implement this method in order to specify  
+     * how to run cross validation.
+     */
+    public void run() {
+	//preprocessImbalancedData();
+	doClustering();
+	//evaluateResult();
+	//printResults();
+    } // run()
+
+    public final void doClustering() {
+	// use SCMPRfidf
+	//SCMPTfidf scmpTfIdf = new SCMPTfidf(this.tweets);
+	//scmpTfIdf.loadSCMPFiles();
+	//scmpTfIdf.estimateTfidfWeights();
+
+	//boolean useTweetScore = false;
+	// make datapoints out of tweets' features.
+	//List<Datapoint> datapoints;
+	//if(useTweetScore) {
+	    // apply tweetScore
+	    //TweetScore tweetScore = new TweetScore(this.tweets);
+	    //double [] metrics = tweetScore.estimateTweetScore();
+	    //datapoints = tweetsToDatapoints(metrics);
+	//} else {
+	//datapoints = tweetsToDatapoints();
+	    //}
+
+	// sample dataset -- oversampling and downsampling
+	//Sampling sampling = new Sampling(datapoints);
+	//datapoints = sampling.sample();
+	/*
+	int outlier = 0;
+	int nonoutlier = 0;
+	System.out.println("[dbg] How many tweets? : " + 
+			   this.tweets.sizeOf());
+	System.out.println("[dbg] How many datapoints? : " + 
+			   datapoints.size());
+	for(Datapoint point: datapoints){
+	    if(point.label) outlier++;
+	    else nonoutlier++;
+	}
+	System.out.println("[dbg] How many outlier datapoints? : " 
+			   + outlier);
+	System.out.println("[dbg] How many non-outlier datapoints? : " 
+			   + nonoutlier);
+	*/
+	// Clustering algorithm
+	String clusteringMethodChoice = "lof";
+	ClusteringMethod method = null;
+	if(clusteringMethodChoice.equals("lof")) {
+	    method = new LOF(datapoints);//, this.tweets);
+	    int k = 2;
+	    System.out.println("[dbg] k : " + k);
+	    ((LOF)method).setk(k);
+	} /*else if(clusteringMethodChoice.equals("db")) {
+	    method = new DB(datapoints);//, this.tweets);
+	} else if(clusteringMethodChoice.equals("contextual")) {
+	    method = new Contextual(datapoints);
+	    ((Contextual)method).setMaxnumWords
+		(this.tweets.getMaxNumWords());
+	    ((Contextual)method).setMaxNumHashTags
+	    (this.tweets.getMaxNumHashtags());
+	}*/
+	// throw new IllegalArgumentException
+	//("No appropriate clustering mathod");
+	method.doClustering();
+    } // apply()
+
+} // Clustering

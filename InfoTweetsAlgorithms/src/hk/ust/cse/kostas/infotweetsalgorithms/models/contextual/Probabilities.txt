@@ -1,0 +1,375 @@
+package hk.ust.cse.kostas.infotweetsalgorithms.models.contextual;
+
+import java.util.Arrays;
+import java.util.List;
+
+import hk.ust.cse.kostas.infotweetsalgorithms.datapoint.Datapoint;
+
+public class Probabilities {
+
+    double [] prLabels;
+    double [] prNegLabels;
+    double [] prTfidfCategories; 
+    double [] prNegTfidfCategories; 
+    double [] prWords;
+    double [] prNegWords;
+    double [] prHashtags;
+    double [] prNegHashtags;
+    double [] prUrls;
+    double [] prNegUrls;
+
+    double [][] cPrWordsTfidfCategories;
+    double [][] cPrNegWordsTfidfCategories;
+    double [][] cPrHashTagsTfidfCategories;
+    double [][] cPrNegHashTagsTfidfCategories;
+    double [][] cPrUrlsTfidfCategories;
+    double [][] cPrNegUrlsTfidfCategories;
+
+    double [][] cPrWordsLabels;
+    double [][] cPrNegWordsLabels;
+    double [][] cPrHashTagsLabels;
+    double [][] cPrNegHashTagsLabels;
+    double [][] cPrUrlsLabels;
+    double [][] cPrNegUrlsLabels;
+    double [][] cPrTfidfCategoriesLabels;
+    double [][] cPrNegTfidfCategoriesLabels;
+
+    int [] labelsFrequencies;
+    int [] wordsFrequencies;
+    int [] hashtagsFrequencies;
+    int [] urlsFrequencies;
+    int [] categoryFrequencies;
+
+    int [][] wordsTfidfCategoriesFrequencies;
+    int [][] hashtagsTfidfCategoriesFrequencies;
+    int [][] urlsTfidfCategoriesFrequencies;
+
+    int [][] wordsLabelsFrequencies;
+    int [][] hashTagsLabelsFrequencies;
+    int [][] urlsLabelsFrequencies;
+    int [][] tfidfCategoriesLabelsFrequencies;
+
+
+    private List<Datapoint> datapoints;
+
+    private int maxnumWords;
+    private int maxnumHashTags;
+    private int maxnumTfidfCategories;
+
+    public Probabilities(List<Datapoint> datapoints, 
+			 int maxnumWords, int maxnumHashTags) {
+	this.datapoints = datapoints;
+
+	this.maxnumTfidfCategories = 11;
+	this.maxnumWords = maxnumWords;
+	this.maxnumHashTags = maxnumHashTags;
+	
+	this.prLabels = new double[2];
+	this.prNegLabels = new double[2];
+	this.prTfidfCategories = 
+	    new double[this.maxnumTfidfCategories];
+	this.prNegTfidfCategories = 
+	    new double[this.maxnumTfidfCategories];
+
+	this.prWords = new double[this.maxnumWords+1];
+	this.prHashtags = new double[this.maxnumHashTags+1];
+	this.prUrls = new double[2];
+
+	this.cPrWordsTfidfCategories = 
+	    new double[this.maxnumWords+1][this.maxnumTfidfCategories];
+	this.cPrNegWordsTfidfCategories = 
+	    new double[this.maxnumWords+1][this.maxnumTfidfCategories];
+	this.cPrHashTagsTfidfCategories = 
+	    new double[this.maxnumHashTags+1][this.maxnumTfidfCategories];
+	this.cPrNegHashTagsTfidfCategories = 
+	    new double[this.maxnumHashTags+1][this.maxnumTfidfCategories];
+	this.cPrUrlsTfidfCategories = 
+	    new double[2][this.maxnumTfidfCategories];
+	this.cPrNegUrlsTfidfCategories = 
+	    new double[2][this.maxnumTfidfCategories];
+
+	this.cPrWordsLabels = new double[this.maxnumWords+1][2];
+	this.cPrNegWordsLabels = new double[this.maxnumWords+1][2];
+	this.cPrHashTagsLabels = new double[this.maxnumHashTags+1][2];
+	this.cPrNegHashTagsLabels = new double[this.maxnumHashTags+1][2];
+	this.cPrUrlsLabels = new double[2][2];
+	this.cPrNegUrlsLabels = new double[2][2];
+
+	this.cPrTfidfCategoriesLabels =
+	    new double[this.maxnumTfidfCategories][this.datapoints.size()];
+	this.cPrNegTfidfCategoriesLabels =
+	    new double[this.maxnumTfidfCategories][this.datapoints.size()];
+
+	this.labelsFrequencies = new int[2];
+	this.wordsFrequencies = new int[this.maxnumWords+1];
+	this.hashtagsFrequencies = new int[this.maxnumHashTags+1];
+	this.urlsFrequencies = new int[2];
+	this.categoryFrequencies = new int[this.maxnumTfidfCategories];
+
+	this.wordsTfidfCategoriesFrequencies = 
+	    new int[this.maxnumWords+1][this.maxnumTfidfCategories];
+	this.hashtagsTfidfCategoriesFrequencies = 
+	    new int[this.maxnumHashTags+1][this.maxnumTfidfCategories];
+	this.urlsTfidfCategoriesFrequencies = 
+	    new int[2][this.maxnumTfidfCategories];
+
+	this.wordsLabelsFrequencies = new int[this.maxnumWords+1][2];
+	this.hashTagsLabelsFrequencies = new int[this.maxnumHashTags+1][2];
+	this.urlsLabelsFrequencies = new int[2][2];
+	this.tfidfCategoriesLabelsFrequencies =
+	    new int[this.maxnumTfidfCategories][2];
+    } // Probabilities()
+
+    public void estimateProbabilities(boolean inliersBool) {
+	int numofDatapoints = this.datapoints.size(); 
+	//Arrays.fill(categoryFrequencies,1);
+	//int [] negcategoryFrequencies= new int[this.maxnumTfidfCategories];
+	for(Datapoint point : this.datapoints) {
+	    if(point.label == true)
+		this.labelsFrequencies[1]++;
+	    else
+		this.labelsFrequencies[0]++;
+	}
+	for(int i=0; i < 2; i++)
+	    this.prLabels[i] = 1.0*labelsFrequencies[i] / numofDatapoints;
+
+	for(Datapoint point : this.datapoints) {
+	    int l;
+	    if(point.label == true) // outlier
+		l = 1;
+	    else // inlier
+		l = 0;
+
+	    int w = (int)point.point[1];
+	    wordsFrequencies[w]++;
+	    int h = (int)point.point[0]; 
+	    hashtagsFrequencies[h]++;
+	    int u = (int)point.point[2];
+	    urlsFrequencies[u]++;
+	    int cat = categorizeTfidfScore(point.point[3]);
+	    categoryFrequencies[cat]++;
+	    
+	    // words given tfidfCategory
+	    wordsTfidfCategoriesFrequencies[w][cat]++;
+	    // hashtags given tfidfCategory
+	    hashtagsTfidfCategoriesFrequencies[h][cat]++;
+	    // urls given tfidfCategory
+	    urlsTfidfCategoriesFrequencies[u][cat]++;
+	    
+	    this.wordsLabelsFrequencies[w][l]++;
+	    this.hashTagsLabelsFrequencies[h][l]++; 
+	    this.urlsLabelsFrequencies[u][l]++;
+	    this.tfidfCategoriesLabelsFrequencies[cat][l]++;		
+	}
+
+	//estimateCondProbOnTfIdfCategories();
+	estimateCondProbOnLabels();
+    } // estimateProbabilities()
+
+    private void estimateCondProbOnTfIdfCategories() {
+	int numofDatapoints = this.datapoints.size(); 
+
+	for(int i = 0; i < this.maxnumTfidfCategories; i++) {
+	    this.prTfidfCategories[i] = 
+		1.0*categoryFrequencies[i] / numofDatapoints;
+	    this.prNegTfidfCategories[i] = 1.0-this.prTfidfCategories[i];
+
+	    //System.out.println(this.tfidfCategoriesPriors[i] + "\t" +
+	    //	       this.negTfidfCategoriesPriors[i]);
+
+	    int negCategoryFrequencies = 
+		numofDatapoints - categoryFrequencies[i];
+
+	    // words
+	    for(int j = 0; j < this.maxnumWords; j++) {
+		this.prWords[j]= 1.0*wordsFrequencies[j] / numofDatapoints;
+
+		int wordsNonCategoryFrequency = 		
+		    wordsFrequencies[j] - 
+		    wordsTfidfCategoriesFrequencies[j][i];
+		if(categoryFrequencies[i] == 0)
+		  this.cPrWordsTfidfCategories[j][i] = 0.0;
+		else 
+		    this.cPrWordsTfidfCategories[j][i] = 
+			1.0 * wordsTfidfCategoriesFrequencies[j][i] / 
+			categoryFrequencies[i];		
+
+		if(negCategoryFrequencies == 0)
+		    this.cPrNegWordsTfidfCategories[j][i] = 0.0;
+		else
+		    this.cPrNegWordsTfidfCategories[j][i] = 
+			1.0 * wordsNonCategoryFrequency / 
+			negCategoryFrequencies;		
+	    }
+	    /*
+	    // hashtags
+	    for(int j = 0; j < this.maxnumHashTags; j++) {
+		this.prHashtags[j] = 
+		    1.0 * hashtagsFrequencies[j] / numofDatapoints;
+
+		int hashtagsNonCategoryFrequency = 
+		    hashtagsFrequencies[j] - 
+		    hashtagsTfidfCategoriesFrequencies[j][i];
+		if(categoryFrequencies[i] == 0)
+		  this.condProbHashTagsTfidfCategories[j][i] = 0.0;
+		else 
+		    this.condProbHashTagsTfidfCategories[j][i] = 
+			1.0 * hashtagsTfidfCategoriesFrequencies[j][i] / 
+			categoryFrequencies[i];
+
+		if(negCategoryFrequencies == 0)
+		    this.negCondProbHashTagsTfidfCategories[j][i] = 0.0;
+		else
+		    this.negCondProbHashTagsTfidfCategories[j][i] = 
+		    1.0 * hashtagsNonCategoryFrequency /
+		    negCategoryFrequencies;
+	    }
+	    
+	    // urls
+	    for(int u = 0; u < 2; u++) {
+		this.prUrls[u] = 1.0*urlsFrequencies[u] / numofDatapoints;
+
+		int urlsNonCategoryFrequency = 
+		    urlsFrequencies[u] - 
+		    urlsTfidfCategoriesFrequencies[u][i];
+		if(categoryFrequencies[i] == 0)
+		    this.condProbUrlsTfidfCategories[u][i] = 0.0;
+		else 
+		    this.condProbUrlsTfidfCategories[u][i] = 
+			1.0 * urlsTfidfCategoriesFrequencies[u][i] / 
+			categoryFrequencies[i];
+
+		if(negCategoryFrequencies == 0)
+		    this.negCondProbUrlsTfidfCategories[u][i] = 0.0;
+		else
+		    this.negCondProbUrlsTfidfCategories[u][i] = 
+		    1.0 * urlsNonCategoryFrequency /
+		    negCategoryFrequencies;
+	    }
+	    */
+	}
+
+	/*
+	for(int w = 0; w < this.maxnumWords; w++) {
+	    //for (int h = 0; h < this.maxnumHashTags; h++) {
+		for(int c = 0; c < this.maxnumTfidfCategories; c++) {
+		Debugger.log("Pr("+w+"|"+c+") =\t" + this.condProbWordsTfidfCategories[w][c]);
+		//Debugger.log("Pr("+h+"|"+c+") =\t" + this.condProbHashTagsTfidfCategories[h][c]);
+		}
+		//}
+	    }	*/
+    } // estimateProbabilities()
+
+    private void estimateCondProbOnLabels() {
+	int numofDatapoints = this.datapoints.size();
+
+
+	for(int i = 0; i < 2; i++) {
+	    this.prLabels[i] = 
+		1.0 * labelsFrequencies[i] / numofDatapoints;
+	    this.prNegLabels[i] = 1.0-this.prLabels[i];
+
+	    int negLabelsFrequencies = 
+		numofDatapoints - labelsFrequencies[i];
+	    // words
+	    for(int j = 0; j < this.maxnumWords; j++) {
+		this.prWords[j]= 1.0*wordsFrequencies[j] / numofDatapoints;
+
+		int wordsNonLabelsFrequency =
+		    wordsFrequencies[j] - wordsLabelsFrequencies[j][i];
+		if(labelsFrequencies[i] == 0)
+		  this.cPrWordsLabels[j][i] = 0.0;
+		else 
+		    this.cPrWordsLabels[j][i] = 
+			1.0 * wordsLabelsFrequencies[j][i] / 
+			labelsFrequencies[i];		
+
+		if(negLabelsFrequencies == 0)
+		    this.cPrNegWordsLabels[j][i] = 0.0;
+		else
+		    this.cPrNegWordsLabels[j][i] = 
+			1.0 * wordsNonLabelsFrequency / 
+			negLabelsFrequencies;
+		/*		
+		Debugger.log("freq " +j+ " = " + labelsFrequencies[j]);
+		Debugger.log("freq(" +j+ "|" +i+") = " +
+			     wordsLabelsFrequencies[j][i]);
+		Debugger.log("freq(" +j+ "|-" +i+") = " + 
+		wordsNonLabelsFrequency); */
+	    }
+	    // hashtags
+	    for(int j = 0; j < this.maxnumHashTags; j++) {
+		this.prHashtags[j] = 
+		    1.0 * hashtagsFrequencies[j] / numofDatapoints;
+
+		int hashtagsNonLabelsFrequency = 
+		    hashtagsFrequencies[j] - 
+		    hashTagsLabelsFrequencies[j][i];
+		if(labelsFrequencies[i] == 0)
+		  this.cPrHashTagsLabels[j][i] = 0.0;
+		else 
+		    this.cPrHashTagsLabels[j][i] = 
+			1.0 * hashTagsLabelsFrequencies[j][i] / 
+			labelsFrequencies[i];
+
+		if(negLabelsFrequencies == 0)
+		    this.cPrNegHashTagsLabels[j][i] = 0.0;
+		else
+		    this.cPrNegHashTagsLabels[j][i] = 
+		    1.0 * hashtagsNonLabelsFrequency /
+		    negLabelsFrequencies;
+	    }
+	    
+	    // urls
+	    for(int u = 0; u < 2; u++) {
+		this.prUrls[u] = 1.0*urlsFrequencies[u] / numofDatapoints;
+
+		int urlsNonLabelsFrequency = 
+		    urlsFrequencies[u] - urlsLabelsFrequencies[u][i];
+		if(labelsFrequencies[i] == 0)
+		    this.cPrUrlsLabels[u][i] = 0.0;
+		else 
+		    this.cPrUrlsLabels[u][i] = 
+			1.0 * urlsLabelsFrequencies[u][i] / 
+			labelsFrequencies[i];
+
+		if(negLabelsFrequencies == 0)
+		    this.cPrNegUrlsLabels[u][i] = 0.0;
+		else
+		    this.cPrNegUrlsLabels[u][i] = 
+		    1.0 * urlsNonLabelsFrequency /
+		    negLabelsFrequencies;
+	    }
+
+	    // tfidfCategories
+	    for(int j = 0; j < this.maxnumTfidfCategories; j++) {
+		this.prTfidfCategories[i] = 
+		    1.0*categoryFrequencies[i] / numofDatapoints;
+
+		int tfidfCategoriesNonLabelsFrequency = 
+		    categoryFrequencies[j] - 
+		    tfidfCategoriesLabelsFrequencies[j][i];
+		if(labelsFrequencies[i] == 0)
+		  this.cPrTfidfCategoriesLabels[j][i] = 0.0;
+		else 
+		    this.cPrTfidfCategoriesLabels[j][i] = 
+			1.0 * tfidfCategoriesLabelsFrequencies[j][i] / 
+			labelsFrequencies[i];
+
+		if(negLabelsFrequencies == 0)
+		    this.cPrNegTfidfCategoriesLabels[j][i] = 0.0;
+		else
+		    this.cPrNegTfidfCategoriesLabels[j][i] = 
+		    1.0 * tfidfCategoriesNonLabelsFrequency /
+		    negLabelsFrequencies;
+	    }
+
+	}
+    } // estimateCondProbOnLabels()
+
+    private int categorizeTfidfScore(double score) {
+	double val = score * 10;
+	return (int )Math.ceil(val);
+    } // categorizeScores()
+
+} // Probabilities

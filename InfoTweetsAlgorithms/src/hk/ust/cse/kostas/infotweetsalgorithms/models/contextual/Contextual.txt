@@ -1,0 +1,223 @@
+package hk.ust.cse.kostas.infotweetsalgorithms.models.contextual;
+
+import java.util.List;
+
+import hk.ust.cse.kostas.infotweetsalgorithms.models.clustering.ClusteringMethod;
+import hk.ust.cse.kostas.infotweetsalgorithms.datapoint.Datapoint;
+
+public class Contextual extends ClusteringMethod {
+
+    //private Log logfiles;
+    private List<Datapoint> datapoints;
+
+    private Probabilities probabilities;
+
+    private int maxnumWords;
+    private int maxnumHashTags;
+    private int maxnumTfidfCategories; 
+
+    public Contextual(List<Datapoint> datapoints) {
+	super(datapoints);
+	this.datapoints = datapoints;
+	this.maxnumTfidfCategories = 11;
+	//this.logfiles = Log.getInstance();
+    } // Contextual()
+
+    public void setMaxnumWords(int max) {
+	this.maxnumWords = max;
+    }
+
+    public void setMaxNumHashTags(int max) {
+	this.maxnumHashTags = max;
+    }
+
+    public void estimate() {
+	//calculateConditionalProbsOnTfIdfCategories();
+	//estimateScoreTfidf();
+	calculateConditionalProbsOnLabels();
+	estimateScoreLabels();
+    }
+
+    private void calculateConditionalProbsOnTfIdfCategories() {
+	boolean OUTLIERS = true;
+	boolean INLIERS = false;
+	this.probabilities = new Probabilities
+	    (this.datapoints, this.maxnumWords, this.maxnumHashTags);
+
+	this.probabilities.estimateProbabilities(INLIERS);
+
+	double [][] Pr = new double[this.maxnumTfidfCategories]
+	    [this.maxnumWords+1];//[this.maxnumHashTags+1][2];
+	for(int w = 0; w < this.maxnumWords; w++) {
+	    //    for (int h = 0; h < this.maxnumHashTags; h++) {
+	    for(int c = 0; c < this.maxnumTfidfCategories; c++) {
+		    //    for(int u = 0; u < 2; u++) {
+		    double numerator = 
+			this.probabilities.prTfidfCategories[c] *
+			this.probabilities.
+			cPrWordsTfidfCategories[w][c];//*
+			//this.probabilities.
+			//condProbHashTagsTfidfCategories[h][c] *
+			//this.probabilities.
+			//condProbUrlsTfidfCategories[u][c];
+		    double denominator = numerator +
+			this.probabilities.prNegTfidfCategories[c] *
+			this.probabilities.
+			cPrNegWordsTfidfCategories[w][c];//*
+		    //this.probabilities.
+		    //negCondProbHashTagsTfidfCategories[h][c]*
+		    //this.probabilities.
+		    //negCondProbUrlsTfidfCategories[u][c];
+		    if(denominator == 0) {
+			//Pr[c][w][h][u] = 0.0;
+			Pr[c][w] = 0.0;
+			//System.out.println("zero denominator!");
+		    } else {
+			//Pr[c][w][h][u] = 1.0 * numerator / denominator;
+			Pr[c][w] = 1.0 * numerator / denominator;
+			//   System.out.println("Pr(" + c + "|" + w 
+			//     + "," + h + ","+ u +") =\t" 
+			//     + Pr[c][w][h][u]);
+		    }
+		    //}
+	    }
+	}	
+	//}
+
+    } // calculateConditionalProbs()
+    
+    private void estimateScoreTfidf() {
+	for(Datapoint datapoint : this.datapoints) {
+	    int currentPointNumWords = (int)datapoint.point[1];
+	    int currentPointNumHashtags = (int)datapoint.point[0];
+	    int currentPointUrl = (int)datapoint.point[2];
+	    int currentPointTfidfCategory = 
+		categorizeTfidfScore(datapoint.point[3]);
+
+	    double score = 
+		((this.probabilities.prWords[currentPointNumWords]) * 
+		 this.probabilities.prTfidfCategories
+		 [currentPointTfidfCategory]* 		
+		 this.probabilities.cPrWordsTfidfCategories
+		 [currentPointNumWords][currentPointTfidfCategory]);
+	    /*		+
+		((this.probabilities.prHashtags[currentPointNumHashtags]) *
+		 this.probabilities.tfidfCategoriesPriors
+		 [currentPointTfidfCategory]* 		
+		 this.probabilities.condProbHashTagsTfidfCategories
+		 [currentPointNumHashtags][currentPointTfidfCategory])
+		+
+		((this.probabilities.prUrls[currentPointUrl]) *
+		 this.probabilities.tfidfCategoriesPriors
+		 [currentPointTfidfCategory]* 		
+		 this.probabilities.condProbUrlsTfidfCategories		
+		 [currentPointUrl][currentPointTfidfCategory]); */
+
+	    if(datapoint.label == false)
+		System.out.println(datapoint.label + "\t" + score);
+	}
+    } // estimateScoreTfidf()
+
+
+    private void calculateConditionalProbsOnLabels() {
+	boolean OUTLIERS = true;
+	boolean INLIERS = false;
+	this.probabilities = new Probabilities
+	    (this.datapoints, this.maxnumWords, this.maxnumHashTags);
+
+	this.probabilities.estimateProbabilities(INLIERS);
+
+	double [][][][][] Pr = new double[2][this.maxnumTfidfCategories]
+	    [this.maxnumWords+1][this.maxnumHashTags+1][2];
+	for(int w = 0; w < this.maxnumWords; w++) {
+	    for (int h = 0; h < this.maxnumHashTags; h++) {
+		for(int c = 0; c < this.maxnumTfidfCategories; c++) {
+		for(int u = 0; u < 2; u++) {
+		for(int l = 0; l < 2; l++) {
+		    double numerator = 
+			this.probabilities.prLabels[l] *
+			this.probabilities.cPrWordsLabels[w][l]*
+			this.probabilities.cPrHashTagsLabels[h][l] *
+			this.probabilities.cPrUrlsLabels[u][l] *
+			this.probabilities.cPrTfidfCategoriesLabels[c][l];
+		    double denominator = numerator +
+			this.probabilities.prNegLabels[l] *
+			this.probabilities.cPrNegWordsLabels[w][l]*
+			this.probabilities.cPrNegHashTagsLabels[h][l] *
+			this.probabilities.cPrNegUrlsLabels[u][l] *
+			this.probabilities.
+			cPrNegTfidfCategoriesLabels[c][l];
+
+		    if(denominator == 0) {
+			//Pr[c][w][h][u] = 0.0;
+			Pr[l][c][w][h][u] = 0.0;
+			//System.out.println("zero denominator!");
+		    } else {
+			//Pr[c][w][h][u] = 1.0 * numerator / denominator;
+			Pr[l][c][w][h][u] = 1.0 * numerator / denominator;
+			//   System.out.println("Pr(" + c + "|" + w 
+			//     + "," + h + ","+ u +") =\t" 
+			//     + Pr[c][w][h][u]);
+		    }
+			}
+		    }
+		}
+	    }	
+	}
+
+    } // calculateConditionalProbs()
+    
+    private void estimateScoreLabels() {
+	for(Datapoint datapoint : this.datapoints) {
+	    int currentPointNumWords = (int)datapoint.point[1];
+	    int currentPointNumHashtags = (int)datapoint.point[0];
+	    int currentPointUrl = (int)datapoint.point[2];
+	    int currentPointTfidfCategory = 
+		categorizeTfidfScore(datapoint.point[3]);
+	    int currentPointLabel = datapoint.label == true ? 1 : 0;
+
+	    double lblProp =this.probabilities.prLabels[currentPointLabel];
+	    double score = 
+		((this.probabilities.prWords[currentPointNumWords]) * 
+		 lblProp *
+		 this.probabilities.cPrWordsLabels
+		 [currentPointNumWords][currentPointLabel])
+	    		+
+		((this.probabilities.prHashtags[currentPointNumHashtags]) *
+		 lblProp *
+		 this.probabilities.cPrHashTagsTfidfCategories
+		 [currentPointNumHashtags][currentPointLabel])
+		+
+		((this.probabilities.prUrls[currentPointUrl]) *
+		 lblProp *
+		 this.probabilities.cPrUrlsLabels		
+		 [currentPointUrl][currentPointLabel])
+		+
+		((this.probabilities.prTfidfCategories
+		  [currentPointTfidfCategory]) *
+		 lblProp *
+		 this.probabilities.cPrTfidfCategoriesLabels	
+		 [currentPointTfidfCategory][currentPointLabel])
+		; 
+	    if(datapoint.label == false)
+		System.out.println(datapoint.label + "\t" + score);
+	}
+    } // estimateScoreLabels()
+
+    public void evaluateResult() {
+	//do nothing
+    } // evaluateResult()
+
+    public void findPointsInDistance() {
+	//do nothing
+    } // findPointsInDistance()
+
+    /* ***** ***** ***** */
+
+    private int categorizeTfidfScore(double score) {
+	double val = score * 10;
+	return (int )Math.ceil(val);
+    } // categorizeScores()
+
+
+} // Contextual

@@ -1,0 +1,304 @@
+
+[message ID]
+389651089101832192
+[times favorited]
+0
+[times retweeted]
+0
+[author ID]
+609047121
+[author # of followers]
+264
+[author # of friends]
+1481
+[author # of tweets]
+2285
+[reply to message ID]
+-1
+[reply to author ID]
+-1
+[retweet of message ID]
+-1
+[retweet to author ID]
+-1
+[original message (for retweet) times favorited]
+0
+[original message (for retweet) times retweeted]
+0
+[message]
+Off to dinner at the bestie's.
+[isReply]
+false
+[isRetweet]
+false
+[outlier]
+false
+[category]
+3
+
+
+[message ID]
+389651089072459776
+[times favorited]
+0
+[times retweeted]
+0
+[author ID]
+442563221
+[author # of followers]
+173
+[author # of friends]
+184
+[author # of tweets]
+6742
+[reply to message ID]
+-1
+[reply to author ID]
+-1
+[retweet of message ID]
+-1
+[retweet to author ID]
+-1
+[original message (for retweet) times favorited]
+0
+[original message (for retweet) times retweeted]
+0
+[message]
+Oh so for today, im the one who will decide what we gonna have for dinner..
+[isReply]
+false
+[isRetweet]
+false
+[outlier]
+true
+[category]
+3
+
+
+[message ID]
+389651089097641985
+[times favorited]
+0
+[times retweeted]
+0
+[author ID]
+284950671
+[author # of followers]
+1652
+[author # of friends]
+1594
+[author # of tweets]
+10518
+[reply to message ID]
+-1
+[reply to author ID]
+-1
+[retweet of message ID]
+-1
+[retweet to author ID]
+-1
+[original message (for retweet) times favorited]
+0
+[original message (for retweet) times retweeted]
+0
+[message]
+#silence http://t.co/SLFO1Mcb11
+[isReply]
+false
+[isRetweet]
+false
+[outlier]
+true
+[category]
+10
+
+
+[message ID]
+389651089064091648
+[times favorited]
+0
+[times retweeted]
+0
+[author ID]
+239046862
+[author # of followers]
+1017
+[author # of friends]
+979
+[author # of tweets]
+44598
+[reply to message ID]
+389650837686865920
+[reply to author ID]
+237428990
+[retweet of message ID]
+-1
+[retweet to author ID]
+-1
+[original message (for retweet) times favorited]
+0
+[original message (for retweet) times retweeted]
+0
+[message]
+@Refreshed_ yesss girl she wrong for that. Ima go find her
+[isReply]
+true
+[isRetweet]
+false
+[outlier]
+true
+[category]
+2
+
+
+[message ID]
+389651089101815809
+[times favorited]
+0
+[times retweeted]
+0
+[author ID]
+1087940203
+[author # of followers]
+257
+[author # of friends]
+22
+[author # of tweets]
+7980
+[reply to message ID]
+-1
+[reply to author ID]
+-1
+[retweet of message ID]
+-1
+[retweet to author ID]
+-1
+[original message (for retweet) times favorited]
+0
+[original message (for retweet) times retweeted]
+0
+[message]
+? RT @arirangworld: [Pops in Seoul] #NUEST in a SECRET BOX! #???? #BeautifulGhost >>http://t.co/JjnR6PI2P7<< http://t.co/yBXNpchLkT
+[isReply]
+false
+[isRetweet]
+false
+[outlier]
+true
+[category]
+10
+
+
+[message ID]
+389651089068281856
+[times favorited]
+0
+[times retweeted]
+0
+[author ID]
+1486482763
+[author # of followers]
+149
+[author # of friends]
+131
+[author # of tweets]
+1799
+[reply to message ID]
+389650793881550848
+[reply to author ID]
+95076414
+[retweet of message ID]
+-1
+[retweet to author ID]
+-1
+[original message (for retweet) times favorited]
+0
+[original message (for retweet) times retweeted]
+0
+[message]
+@dopeislixxa you're right, it's not
+[isReply]
+true
+[isRetweet]
+false
+[outlier]
+true
+[category]
+2
+
+
+[message ID]
+387676954217811969
+[times favorited]
+0
+[times retweeted]
+0
+[author ID]
+1918453633
+[author # of followers]
+199
+[author # of friends]
+219
+[author # of tweets]
+4297
+[reply to message ID]
+-1
+[reply to author ID]
+-1
+[retweet of message ID]
+-1
+[retweet to author ID]
+1918453633
+[original message (for retweet) times favorited]
+532
+[original message (for retweet) times retweeted]
+208
+[message]
+ A military water color postal stamp that my grandparents proudly posed for, 1945 http://t.co/8t58FGiRNC
+[isReply]
+false
+[isRetweet]
+true
+[outlier]
+true
+[category]
+9
+
+
+[message ID]
+389651089077047296
+[times favorited]
+0
+[times retweeted]
+0
+[author ID]
+27198487
+[author # of followers]
+533
+[author # of friends]
+854
+[author # of tweets]
+23615
+[reply to message ID]
+-1
+[reply to author ID]
+-1
+[retweet of message ID]
+-1
+[retweet to author ID]
+-1
+[original message (for retweet) times favorited]
+0
+[original message (for retweet) times retweeted]
+0
+[message]
+Met 'picks up 9% of trafficking' http://t.co/KmKKzzbMNl
+[isReply]
+false
+[isRetweet]
+false
+[outlier]
+false
+[category]
+4
+

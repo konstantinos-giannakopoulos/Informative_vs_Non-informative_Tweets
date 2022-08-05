@@ -1,5 +1,5 @@
 # Informative_vs_Non-informative_Tweets
-A Java implementation for filtering out tweets. 
+A proposed Naive Bayes' variation implemented in Java for filtering out tweets. 
 
 This is the coding implementations for my paper:
 
